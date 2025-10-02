@@ -1,0 +1,86 @@
+﻿2025-10-02T16:30:41.5649198Z ##[group]Run echo "#### Disk Details ####"
+echo "#### Disk Details ####"
+curl -sL https://raw.githubusercontent.com/masonr/yet-another-bench-script/master/yabs.sh -o yabs.sh
+ls -la
+chmod +x yabs.sh
+./yabs.sh -i
+shell: /usr/bin/bash -e {0}
+#### Disk Details ####
+total 120
+drwxr-xr-x 7 runner runner  4096 Oct  2 16:30 .
+drwxr-xr-x 3 runner runner  4096 Oct  2 16:27 ..
+drwxr-xr-x 7 runner runner  4096 Oct  2 16:27 .git
+drwxr-xr-x 3 runner runner  4096 Oct  2 16:27 .github
+drwxr-xr-x 2 runner runner  4096 Oct  2 16:27 Custom
+-rw-r--r-- 1 runner runner   189 Oct  2 16:27 README.md
+-rw-r--r-- 1 runner runner   532 Oct  2 16:27 add-dev-script.sh
+-rw-r--r-- 1 runner runner  4381 Oct  2 16:27 app-config.yaml
+-rw-r--r-- 1 runner runner  3609 Oct  2 16:27 app.tsx
+-rw-r--r-- 1 runner runner  1375 Oct  2 16:27 backend.ts
+drwxr-xr-x 3 runner runner  4096 Oct  2 16:27 cata
+-rw-r--r-- 1 runner runner  2408 Oct  2 16:27 deps.tsx
+-rw-r--r-- 1 runner runner  5356 Oct  2 16:27 file.svg
+drwxr-xr-x 3 runner runner  4096 Oct  2 16:27 generated
+-rw-r--r-- 1 runner runner   848 Oct  2 16:27 home.tsx
+-rw-r--r-- 1 runner runner 49469 Oct  2 16:30 yabs.sh
+# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #
+#              Yet-Another-Bench-Script              #
+#                     v2025-04-20                    #
+# https://github.com/masonr/yet-another-bench-script #
+# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #
+
+Thu Oct  2 16:30:41 UTC 2025
+
+Basic System Information:
+---------------------------------
+Uptime     : 0 days, 0 hours, 3 minutes
+Processor  : AMD EPYC 7763 64-Core Processor
+CPU cores  : 2 @ 3244.400 MHz
+AES-NI     : ✔ Enabled
+VM-x/AMD-V : ✔ Enabled
+RAM        : 7.8 GiB
+Swap       : 3.0 GiB
+Disk       : 72.6 GiB
+Distro     : Ubuntu 24.04.3 LTS
+Kernel     : 6.11.0-1018-azure
+VM Type    : MICROSOFT
+IPv4/IPv6  : ✔ Online / ❌ Offline
+
+IPv4 Network Information:
+---------------------------------
+ISP        : Microsoft Corporation
+ASN        : AS8075 Microsoft Corporation
+Host       : Microsoft Azure Cloud (northcentralus)
+Location   : Chicago, Illinois (IL)
+Country    : United States
+
+Preparing system for disk tests...
+[0KGenerating fio test file...
+[0KRunning fio random mixed R+W disk test with 4k block size...
+[0KRunning fio random mixed R+W disk test with 64k block size...
+[0KRunning fio random mixed R+W disk test with 512k block size...
+[0KRunning fio random mixed R+W disk test with 1m block size...
+[0Kfio Disk Speed Tests (Mixed R/W 50/50) (Partition /dev/root):
+---------------------------------
+Block Size | 4k            (IOPS) | 64k           (IOPS)
+  ------   | ---            ----  | ----           ---- 
+Read       | 18.78 MB/s    (4.6k) | 103.07 MB/s   (1.6k)
+Write      | 18.79 MB/s    (4.6k) | 103.61 MB/s   (1.6k)
+Total      | 37.57 MB/s    (9.3k) | 206.68 MB/s   (3.2k)
+           |                      |                     
+Block Size | 512k          (IOPS) | 1m            (IOPS)
+  ------   | ---            ----  | ----           ---- 
+Read       | 100.85 MB/s    (196) | 100.38 MB/s     (98)
+Write      | 106.21 MB/s    (207) | 107.06 MB/s    (104)
+Total      | 207.07 MB/s    (403) | 207.45 MB/s    (202)
+
+Running GB6 benchmark test... *cue elevator music*
+[0KGeekbench 6 Benchmark Test:
+---------------------------------
+Test            | Value                         
+                |                               
+Single Core     | 1556                          
+Multi Core      | 1963                          
+Full Test       | https://browser.geekbench.com/v6/cpu/14219679
+
+YABS completed in 9 min 34 sec
