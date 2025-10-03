@@ -1,15 +1,15 @@
 shell: /usr/bin/bash -e {0}
 #### MiniBench no log ####
  
-____ ____ ____     ___  ____ _  _ ____ _  _ 
-[__  |__| [__      |__] |___ |\ | |    |__| 
-___] |  | ___] ___ |__] |___ | \| |___ |  | 
-                                            
-  CPU & Memory Benchmark Script
 #################################################################
-
-############### SYSTEM INFO ###############
-User:       runner
+____ ____ ____     ___  ____ _  _ ____ _  _   
+[__  |__| [__      |__] |___ |\ | |    |__|   
+___] |  | ___] ___ |__] |___ | \| |___ |  |   
+                                              
+  CPU & Memory Benchmark Script  
+ 
+############### SYSTEM INFO #####################################
+User:  runner
 Directory:  /home/runner/work/GA_Project/GA_Project
 Hostname:   runnervm3ublj
 OS:         Linux 6.11.0-1018-azure (x86_64)
@@ -21,16 +21,24 @@ Uptime:     up 2 minutes
 #################################################################
 
 [CPU] Single-core benchmark for 60s...
-[CPU] Single-core → 50.77 thousand ops/sec
+[CPU] Single-core → 50.2610 thousand ops/sec
 [CPU] Multi-core benchmark on 2 cores for 60s...
-[CPU] Multi-core → 78.74 thousand ops/sec (all 2 cores)
+[CPU] Multi-core → 77.3940 thousand ops/sec (all 2 cores)
+[MEM-SIMPLE] Running lightweight memory test (5s, container safe)...
+[MEM-SIMPLE] Average throughput → 980.8000 MB/sec
 [MEM] Running benchmark for 60s...
-[MEM] Using 3972 MB per iteration
-[MEM] Average throughput over 60 sec → 1456.40 MB/sec
+[MEM] Attempting to allocate 3574 MB (45% of total memory)
+[MEM] Average throughput over 60 sec → 1429.6000 MB/sec
 
-############### BENCHMARK RESULTS ##########################
-Single-core CPU: 50.77 thousand ops/sec
-Multi-core CPU:  78.74 thousand ops/sec
-Memory:          1456.40 MB/sec
+############### BENCHMARK RESULTS ###############################
+ 
+Single-core CPU: 50.2610 thousand ops/sec
+Multi-core CPU:  77.3940 thousand ops/sec
+Simple Memory:   980.8000 MB/sec
+Full Memory:     1429.6000 MB/sec
+ 
+CPU Score:       77.39
+Memory Score:    98.08
+ 
 #################################################################
 [INFO] Results saved to benchmark_results.txt
