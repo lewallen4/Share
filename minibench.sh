@@ -7,6 +7,13 @@ DURATION=60   # seconds to run each CPU test
 RESULT_FILE="benchmark_results.txt"  
 MEM_FALLBACKS=""  # Track any memory fallback messages
 
+# Baselines (arbitrary reference for an "8-core 3GHz" system)
+CPU_BASELINE=10000   # thousand ops/sec (multi-core)
+MEM_BASELINE=5000    # MB/sec (simple mem)
+
+CPU_SCORE=0
+MEM_SCORE=0
+
 # ASCII Art banner  
 print_banner() {  
 cat << 'EOF'  
@@ -199,6 +206,17 @@ mem_bench() {
     rm -f /dev/shm/memtest
 }  
 
+# ----------------------------
+# SCORING FUNCTIONS
+# ----------------------------
+calc_cpu_score() {
+    CPU_SCORE=$(awk -v r="$MULTI_RESULT" -v base="$CPU_BASELINE" 'BEGIN {printf "%.0f", (r/base)*100}')
+}
+
+calc_mem_score() {
+    MEM_SCORE=$(awk -v r="$SIMPLE_MEM_RESULT" -v base="$MEM_BASELINE" 'BEGIN {printf "%.0f", (r/base)*100}')
+}
+
 print_dashboard() {  
     echo  
     echo "############### BENCHMARK RESULTS ###############################"  
@@ -211,6 +229,9 @@ print_dashboard() {
         echo "$MEM_FALLBACKS"
     fi
     echo " "  
+    printf "CPU Score:       %d\n" "$CPU_SCORE"
+    printf "Memory Score:    %d\n" "$MEM_SCORE"
+    echo " "  
     echo "#################################################################"  
 }  
 
@@ -220,6 +241,8 @@ write_results_file() {
         echo "Multi-test: $MULTI_RESULT"  
         echo "Simple-mem-test: $SIMPLE_MEM_RESULT"  
         echo "Mem-test: $MEM_RESULT"  
+        echo "CPU-score: $CPU_SCORE"  
+        echo "Mem-score: $MEM_SCORE"  
         [ -n "$MEM_FALLBACKS" ] && echo "$MEM_FALLBACKS"
     } > "$RESULT_FILE"  
     echo "[INFO] Results saved to $RESULT_FILE"  
@@ -232,5 +255,7 @@ cpu_single
 cpu_multi  
 mem_simple_bench  
 mem_bench  
+calc_cpu_score  
+calc_mem_score  
 print_dashboard  
 write_results_file
