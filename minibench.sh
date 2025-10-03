@@ -107,6 +107,36 @@ cpu_multi() {
     rm -rf "$tmpdir"  
 }  
 
+# ----------------------------
+# NEW SIMPLE CONTAINER-SAFE MEM TEST
+# ----------------------------
+mem_simple_bench() {
+    echo "[MEM-SIMPLE] Running lightweight memory test (5s, container safe)..."
+    local duration=5
+    local start_ns=$(date +%s%N)
+    local end_ns=$((start_ns + duration * 1000000000))
+    local total_bytes=0
+    local block_size=$((1024*1024)) # 1MB blocks
+    local tmpfile=$(mktemp /dev/shm/simple_memtest.XXXXXX || echo "/tmp/simple_memtest.$$")
+
+    while [ $(date +%s%N) -lt $end_ns ]; do
+        if dd if=/dev/zero of="$tmpfile" bs=$block_size count=8 conv=fdatasync status=none 2>/dev/null; then
+            total_bytes=$((total_bytes + 8 * block_size))
+        else
+            echo "[MEM-SIMPLE] Write failed, breaking."
+            break
+        fi
+    done
+
+    rm -f "$tmpfile"
+
+    SIMPLE_MEM_RESULT=$(awk "BEGIN {print $total_bytes/1024/1024/$duration}")
+    printf "[MEM-SIMPLE] Average throughput → %.2f MB/sec\n" "$SIMPLE_MEM_RESULT"
+}
+
+# ----------------------------
+# ORIGINAL FULL MEMORY TEST
+# ----------------------------
 mem_bench() {  
     echo "[MEM] Running benchmark for ${DURATION}s..."  
     if [ ! -f /proc/meminfo ]; then
@@ -117,14 +147,14 @@ mem_bench() {
 
     local mb=0
     MEM_FALLBACKS=""
-    
-    # Try 95% of total memory
+
+    # Try 45% of total memory
     local total_mem_mb=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
     mb=$(( total_mem_mb * 45 / 100 ))
     echo "[MEM] Attempting to allocate $mb MB (45% of total memory)"
-    
+
     mkdir -p /dev/shm || { echo "[ERROR] Cannot access /dev/shm"; MEM_RESULT="N/A"; return; }
-    
+
     local start_ns=$(date +%s%N)
     local end_ns=$((start_ns + DURATION * 1000000000))
     local total_bytes=0
@@ -135,7 +165,6 @@ mem_bench() {
             break
         else
             MEM_FALLBACKS="[WARN] 45% of MemTotal failed, trying 45% of MemAvailable"
-            # Try 95% of MemAvailable
             mb=$(awk '/MemAvailable/ {print int($2/1024*0.45)}' /proc/meminfo)
             if dd if=/dev/zero of=/dev/shm/memtest bs=1M count="$mb" conv=fdatasync status=none 2>/dev/null; then
                 total_bytes=$((total_bytes + mb * 1024 * 1024))
@@ -156,7 +185,6 @@ mem_bench() {
         fi
     done
 
-    # Loop until duration completes
     while [ $(date +%s%N) -lt $end_ns ]; do
         if ! dd if=/dev/zero of=/dev/shm/memtest bs=1M count="$mb" conv=fdatasync status=none 2>/dev/null; then
             echo "[WARN] Memory write failed during iteration, stopping loop"
@@ -177,7 +205,8 @@ print_dashboard() {
     echo " "  
     printf "Single-core CPU: %s thousand ops/sec\n" "$SINGLE_RESULT"  
     printf "Multi-core CPU:  %s thousand ops/sec\n" "$MULTI_RESULT"  
-    printf "Memory:          %s MB/sec\n" "$MEM_RESULT"  
+    printf "Simple Memory:   %s MB/sec\n" "$SIMPLE_MEM_RESULT"  
+    printf "Full Memory:     %s MB/sec\n" "$MEM_RESULT"  
     if [ -n "$MEM_FALLBACKS" ]; then
         echo "$MEM_FALLBACKS"
     fi
@@ -189,6 +218,7 @@ write_results_file() {
     {  
         echo "Single-test: $SINGLE_RESULT"  
         echo "Multi-test: $MULTI_RESULT"  
+        echo "Simple-mem-test: $SIMPLE_MEM_RESULT"  
         echo "Mem-test: $MEM_RESULT"  
         [ -n "$MEM_FALLBACKS" ] && echo "$MEM_FALLBACKS"
     } > "$RESULT_FILE"  
@@ -200,6 +230,7 @@ print_banner
 print_system_info  
 cpu_single  
 cpu_multi  
+mem_simple_bench  
 mem_bench  
 print_dashboard  
 write_results_file
