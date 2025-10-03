@@ -8,8 +8,8 @@ RESULT_FILE="benchmark_results.txt"
 MEM_FALLBACKS=""  # Track any memory fallback messages
 
 # Baselines (arbitrary reference for an "8-core 3GHz" system)
-CPU_BASELINE=100000   # thousand ops/sec (multi-core)
-MEM_BASELINE=1000     # MB/sec (simple mem)
+CPU_BASELINE=1000   # thousand ops/sec (multi-core)
+MEM_BASELINE=100     # MB/sec (simple mem)
 
 CPU_SCORE=0
 MEM_SCORE=0
